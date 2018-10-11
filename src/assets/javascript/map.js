@@ -121,6 +121,9 @@ export const addNormalSourceLayer = function ({
     case 'line':
       addLines(id, sourceid, style);
       break;
+    case 'fill':
+      addPolygons(id, sourceid, style);
+      break;
   }
 };
 
@@ -158,6 +161,20 @@ export const addLines = function (groupid, sourceid, style) {
       'line-opacity': style['line-opacity'] || 0.5,
       'line-color': style['line-color'] || '#888',
       'line-width': style['line-width'] || 5
+    }
+  });
+};
+/*
+  添加 polygon
+ */
+export const addPolygons = function (groupid, sourceid, style) {
+  addSourceLayer(groupid, sourceid, {
+    type: 'fill',
+    layout: {
+    },
+    paint: {
+      'fill-opacity': style['fill-opacity'] || 0.5,
+      'fill-color': style['fill-color'] || '#888',
     }
   });
 };

@@ -62,7 +62,7 @@
             ]
           }
         };
-        let lineSource = 'lineSource'
+        let lineSource = 'lineSource';
         addNormalSourceLayer({
           id: lineSource,
           type: 'line',
@@ -75,6 +75,48 @@
           }
         });
         setSourceData(lineSource, lineFeature);
+
+        // 添加面
+        let polygonSrouceid = 'polygon';
+        let polygonFeature = {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
+              [
+                [
+                  116.441446,
+                  39.927898
+                ],
+                [
+                  116.441464,
+                  39.926595
+                ],
+                [
+                  116.443503,
+                  39.926567
+                ],
+                [
+                  116.443552,
+                  39.927058
+                ],
+                [
+                  116.444109,
+                  39.927898
+                ]
+              ]
+            ]
+          }
+        };
+        addNormalSourceLayer({
+          id: polygonSrouceid,
+          type: 'fill',
+          sourceid: polygonSrouceid,
+          style: {
+            'fill-color': 'red'
+          }
+        });
+        setSourceData(polygonSrouceid, polygonFeature);
       }
     },
     components: {
