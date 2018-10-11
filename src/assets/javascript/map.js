@@ -41,7 +41,7 @@ export const initMap = function (id, zoom, center) {
       center: center,
       minZoom: 3,
       maxZoom: 18,
-      // dragRotate: true
+      dragRotate: true
     });
     map.addControl(new mapboxgl.NavigationControl());
     var scale = new mapboxgl.ScaleControl({
@@ -49,10 +49,118 @@ export const initMap = function (id, zoom, center) {
       unit: 'metric'
     });
     map.addControl(scale, 'bottom-right');
+
     return map;
   }
 };
 
+/*
+  添加源
+ */
+export const addSource = function (sourceid, data) {
+  map.addSource(sourceid, {
+    type: 'geojson',
+    data: data
+  })
+};
+
+/*
+  根据数据源添加层
+ */
+export const addSourceLayer = function (groupid, source, obj) {
+  let layer = {
+    id: groupid,
+    type: obj.type,
+    source: source
+  };
+  if (obj.layout) {
+    layer.layout = obj.layout;
+  }
+  map.addLayer(layer);
+};
+
+/*
+更新数据
+ */
+export const setSourceData = function (sourceid, _data) {
+  let source = map.getSource(sourceid);
+  let data = _data;
+  if (!_data) {
+    data = {
+      type: 'FeatureCollection',
+      features: []
+    };
+  }
+  if (source) {
+    source.setData(data);
+  } else {
+    map.addSource(sourceid, {
+      type: 'geojson',
+      data: data
+    })
+  }
+};
+
+export const addNormalSourceLayer = function ({
+                                                id,
+                                                sourceid,
+                                                type,
+                                                style
+                                              }) {
+  if (map.getLayer(id)) {
+    return;
+  }
+  setSourceData(sourceid, null);
+  switch (type) {
+    case 'symbol':
+      addMarkers(id, sourceid, style);
+  }
+};
+
+/*
+  添加marker
+ */
+export const addMarkers = function (groupid, sourceid, style) {
+  let imageurl = style['icon-image'];
+  map.loadImage(imageurl, (error, image) => {
+    if (error) {
+      console.log(error, imageurl);
+    } else {
+      map.addImage(sourceid, image);
+      /*map.addLayer({
+        'id': 'points',
+        'type': 'symbol',
+        'source': {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [{
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [116.413005, 39.973209]
+              }
+            }]
+          }
+        },
+        'layout': {
+          'icon-image': 'cat',
+          'icon-size': 0.25
+        }
+      });*/
+      addSourceLayer(groupid, sourceid, {
+        type: 'symbol',
+        layout: {
+          'icon-image': sourceid,
+          'icon-size': style['icon-size'] || 1 // 图标大小
+        }
+      });
+    }
+  });
+};
+
 export default {
-  initMap
+  initMap,
+  addNormalSourceLayer,
+  setSourceData
 };
