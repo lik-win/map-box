@@ -2,6 +2,7 @@
   <div class="wrap">
     <map-box
       @map-loaded="mapLoaded"
+      :layerids="layerids"
     ></map-box>
   </div>
 </template>
@@ -16,7 +17,18 @@
   export default {
     name: 'HelloWorld',
     data() {
-      return {}
+      return {
+        layerids: [{
+          layerid: 'cat',
+          className: 'active'
+        }, {
+          layerid: 'line',
+          className: 'active'
+        }, {
+          layerid: 'polygon',
+          className: 'active'
+        }]
+      }
     },
     methods: {
       mapLoaded() {
@@ -64,7 +76,7 @@
             ]
           }
         };
-        let lineSource = 'lineSource';
+        let lineSource = 'line';
         addNormalSourceLayer({
           id: lineSource,
           type: 'line',
