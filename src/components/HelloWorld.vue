@@ -20,6 +20,7 @@
     },
     methods: {
       mapLoaded() {
+        // 添加点
         let features = {
           type: 'FeatureCollection',
           features: [
@@ -41,13 +42,14 @@
         };
         let sourceid = 'cat';
         addNormalSourceLayer({
-          id: 'point',
+          id: sourceid,
           type: 'symbol',
           sourceid: sourceid,
           style: {
             'icon-image': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png',
             'icon-size': 0.2
-          }
+          },
+          isShow: true
         });
         setSourceData(sourceid, features);
 

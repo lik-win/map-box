@@ -43,13 +43,12 @@ export const initMap = function (id, zoom, center) {
       maxZoom: 18,
       dragRotate: true
     });
-    map.addControl(new mapboxgl.NavigationControl());
     var scale = new mapboxgl.ScaleControl({
       maxWidth: 100,
       unit: 'metric'
     });
     map.addControl(scale, 'bottom-right');
-
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
     return map;
   }
 };
@@ -105,18 +104,19 @@ export const setSourceData = function (sourceid, _data) {
 };
 
 export const addNormalSourceLayer = function ({
-                                                id,
-                                                sourceid,
-                                                type,
-                                                style
-                                              }) {
+  id,
+  sourceid,
+  type,
+  style,
+  isShow
+}) {
   if (map.getLayer(id)) {
     return;
   }
   setSourceData(sourceid, null);
   switch (type) {
     case 'symbol':
-      addMarkers(id, sourceid, style);
+      addMarkers(id, sourceid, style, isShow);
       break;
     case 'line':
       addLines(id, sourceid, style);
@@ -130,7 +130,8 @@ export const addNormalSourceLayer = function ({
 /*
   添加 marker
  */
-export const addMarkers = function (groupid, sourceid, style) {
+export const addMarkers = function (groupid, sourceid, style, isShow) {
+  let show = isShow ? 'visible' : 'none';
   let imageurl = style['icon-image'];
   map.loadImage(imageurl, (error, image) => {
     if (error) {
@@ -140,6 +141,7 @@ export const addMarkers = function (groupid, sourceid, style) {
       addSourceLayer(groupid, sourceid, {
         type: 'symbol',
         layout: {
+          'visibility': show,
           'icon-image': sourceid,
           'icon-size': style['icon-size'] || 1 // 图标大小
         }
@@ -174,7 +176,7 @@ export const addPolygons = function (groupid, sourceid, style) {
     },
     paint: {
       'fill-opacity': style['fill-opacity'] || 0.5,
-      'fill-color': style['fill-color'] || '#888',
+      'fill-color': style['fill-color'] || '#888'
     }
   });
 };
