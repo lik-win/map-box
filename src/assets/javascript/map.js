@@ -76,6 +76,9 @@ export const addSourceLayer = function (groupid, source, obj) {
   if (obj.layout) {
     layer.layout = obj.layout;
   }
+  if (obj.paint) {
+    layer.paint = obj.paint;
+  }
   map.addLayer(layer);
 };
 
@@ -114,11 +117,15 @@ export const addNormalSourceLayer = function ({
   switch (type) {
     case 'symbol':
       addMarkers(id, sourceid, style);
+      break;
+    case 'line':
+      addLines(id, sourceid, style);
+      break;
   }
 };
 
 /*
-  添加marker
+  添加 marker
  */
 export const addMarkers = function (groupid, sourceid, style) {
   let imageurl = style['icon-image'];
@@ -127,27 +134,6 @@ export const addMarkers = function (groupid, sourceid, style) {
       console.log(error, imageurl);
     } else {
       map.addImage(sourceid, image);
-      /*map.addLayer({
-        'id': 'points',
-        'type': 'symbol',
-        'source': {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [{
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [116.413005, 39.973209]
-              }
-            }]
-          }
-        },
-        'layout': {
-          'icon-image': 'cat',
-          'icon-size': 0.25
-        }
-      });*/
       addSourceLayer(groupid, sourceid, {
         type: 'symbol',
         layout: {
@@ -155,6 +141,23 @@ export const addMarkers = function (groupid, sourceid, style) {
           'icon-size': style['icon-size'] || 1 // 图标大小
         }
       });
+    }
+  });
+};
+/*
+  添加 line
+ */
+export const addLines = function (groupid, sourceid, style) {
+  addSourceLayer(groupid, sourceid, {
+    type: 'line',
+    layout: {
+      'line-join': style['line-join'] || 'round',
+      'line-cap': style['line-cap'] || 'round'
+    },
+    paint: {
+      'line-opacity': style['line-opacity'] || 0.5,
+      'line-color': style['line-color'] || '#888',
+      'line-width': style['line-width'] || 5
     }
   });
 };

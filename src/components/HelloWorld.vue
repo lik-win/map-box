@@ -50,6 +50,31 @@
           }
         });
         setSourceData(sourceid, features);
+
+        // 添加线
+        let lineFeature = {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'LineString',
+            'coordinates': [
+              [116.413005, 39.973209],
+              [116.483465, 39.913445]
+            ]
+          }
+        };
+        let lineSource = 'lineSource'
+        addNormalSourceLayer({
+          id: lineSource,
+          type: 'line',
+          sourceid: lineSource,
+          style: {
+            'line-join': 'round',
+            'line-cap': 'round',
+            'line-color': '#888',
+            'line-width': 3
+          }
+        });
+        setSourceData(lineSource, lineFeature);
       }
     },
     components: {
